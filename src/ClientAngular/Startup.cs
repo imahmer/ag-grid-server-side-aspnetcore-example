@@ -1,10 +1,13 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using ClientAngular.Bootstrapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace ClientAngular
 {
@@ -17,8 +20,10 @@ namespace ClientAngular
 
         public IConfiguration Configuration { get; }
 
+        public IContainer ApplicationContainer { get; set; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
@@ -26,6 +31,29 @@ namespace ClientAngular
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            var builder = new ContainerBuilder();
+
+
+            // read service collection to Autofac
+            builder.Populate(services);
+
+            // build the Autofac container
+            ConfigureContainer(builder);
+
+            return new AutofacServiceProvider(ApplicationContainer);
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            // Add any Autofac modules or registrations.
+            // This is called AFTER ConfigureServices so things you
+            // register here OVERRIDE things registered in ConfigureServices.
+            //
+            // You must have the call to AddAutofac in the Program.Main
+            // method or this won't be called.
+            builder.RegisterModule(new AutofacModule());
+            ApplicationContainer = builder.Build();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

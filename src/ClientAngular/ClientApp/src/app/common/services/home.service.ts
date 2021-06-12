@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
-import { BranchModel } from '../models/branch.model';
+import { OlympicWinnerModel } from '../models/olympic-winner.model';
 
 @Injectable()
 export class HomeService {
     // Define Base API
-    apiURL = "https://localhost:5001";
+    apiURL = "https://localhost:44341";
 
     // Http Options
     httpOptions = {
@@ -18,7 +18,7 @@ export class HomeService {
 
     constructor(private http: HttpClient) { }
 
-    public getBranches(startRow, endRow): Observable<BranchModel> {
+    public getOlympicWinners(startRow, endRow): Observable<OlympicWinnerModel> {
         let postData = {
             "startIndex": startRow + 1,
             "pageSize": endRow,
@@ -27,14 +27,22 @@ export class HomeService {
             "gridContainerId": "string",
             "gridPageIndex": 0,
             "searchKeyword": "string",
-            "branchId": null,
-            "branchGridFilterListItem": [{
+            "olympicWinnerId": null,
+            "olympicWinnerGridFilterListItem": [{
                 "id": 0,
-                "branch": "string",
-                "address": "string"
+                "athlete": "string",
+                "age": 0,
+                "country": "string",
+                "year": 0,
+                "date": "string",
+                "sport": "string",
+                "gold": 0,
+                "silver": 0,
+                "bronze": 0,
+                "total": 0,
             }]
         };
-        return this.http.post<BranchModel>(this.apiURL + '/api/Branch/GetBranchList', JSON.stringify(postData), this.httpOptions)
+        return this.http.post<OlympicWinnerModel>(this.apiURL + '/api/OlympicWinner/GetOlympicWinnerList', JSON.stringify(postData), this.httpOptions)
             .pipe(
                 retry(1),
                 catchError(this.handleError)

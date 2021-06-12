@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BranchModel } from '../common/models/branch.model';
+import { OlympicWinnerModel } from '../common/models/olympic-winner.model';
 import { FacadeService } from '../common/services/facade.service';
 
 @Component({
@@ -7,13 +7,13 @@ import { FacadeService } from '../common/services/facade.service';
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
-  branchList: Array<BranchModel>;
+  olympicWinnerList: Array<OlympicWinnerModel>;
   constructor(private facadeService: FacadeService) { }
 
   ngOnInit() {
-    this.facadeService.getBranches(1, 20).subscribe((data:any) => {
-      this.branchList = data.branchGridFilterListItem;
-      console.log(this.branchList)
+    this.facadeService.getOlympicWinners(1, 20).subscribe((data:any) => {
+      this.olympicWinnerList = data.olympicWinnerGridFilterListItem;
+      console.log(this.olympicWinnerList)
     });
   }
 }

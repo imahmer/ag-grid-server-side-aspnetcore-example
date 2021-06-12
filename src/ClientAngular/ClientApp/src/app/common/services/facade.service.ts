@@ -18,7 +18,6 @@ export class FacadeService {
 
     private _dashboardService: HomeService;
     public get dashboardService(): HomeService {
-        debugger;
         if (!this._dashboardService) {
             this._dashboardService = this.injector.get(HomeService);
         }
@@ -60,8 +59,8 @@ export class FacadeService {
     //     return this.accountService.getAddress();
     //   }
 
-    getBranches(startRow, endRow) {
-        return this.dashboardService.getBranches(startRow, endRow);
+    getOlympicWinners(startRow, endRow) {
+        return this.dashboardService.getOlympicWinners(startRow, endRow);
     }
 
     //   isAuthenticated() {
