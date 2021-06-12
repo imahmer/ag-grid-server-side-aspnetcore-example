@@ -10,6 +10,9 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 
+import {AgGridModule} from "ag-grid-angular";
+import { SharedModule } from './common/shared.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,6 +25,8 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    AgGridModule.withComponents([]),
+    SharedModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
