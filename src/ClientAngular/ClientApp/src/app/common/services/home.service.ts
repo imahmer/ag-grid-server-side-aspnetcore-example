@@ -18,30 +18,7 @@ export class HomeService {
 
     constructor(private http: HttpClient) { }
 
-    public getOlympicWinners(startRow, endRow): Observable<OlympicWinnerModel> {
-        let postData = {
-            "startIndex": startRow + 1,
-            "pageSize": endRow,
-            "totalRecords": 1569,
-            "filterFormId": "string",
-            "gridContainerId": "string",
-            "gridPageIndex": 0,
-            "searchKeyword": "string",
-            "olympicWinnerId": null,
-            "olympicWinnerGridFilterListItem": [{
-                "id": 0,
-                "athlete": "string",
-                "age": 0,
-                "country": "string",
-                "year": 0,
-                "date": "string",
-                "sport": "string",
-                "gold": 0,
-                "silver": 0,
-                "bronze": 0,
-                "total": 0,
-            }]
-        };
+    public getOlympicWinners(postData): Observable<OlympicWinnerModel> {
         return this.http.post<OlympicWinnerModel>(this.apiURL + '/api/OlympicWinner/GetOlympicWinnerList', JSON.stringify(postData), this.httpOptions)
             .pipe(
                 retry(1),
