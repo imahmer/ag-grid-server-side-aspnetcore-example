@@ -12,6 +12,8 @@
   },
   "private": true,
   "dependencies": {
+    "@ag-grid-community/core": "^25.3.0",
+    "@ag-grid-enterprise/server-side-row-model": "^25.3.0",
     "@angular/animations": "9.1.13",
     "@angular/common": "9.1.13",
     "@angular/compiler": "9.1.13",
@@ -24,7 +26,6 @@
     "@nguniversal/module-map-ngfactory-loader": "8.1.1",
     "ag-grid-angular": "^25.3.0",
     "ag-grid-community": "^25.3.0",
-    "ag-grid-enterprise": "^25.3.0",
     "bootstrap": "^4.6.0",
     "core-js": "^3.8.3",
     "jquery": "^3.5.1",

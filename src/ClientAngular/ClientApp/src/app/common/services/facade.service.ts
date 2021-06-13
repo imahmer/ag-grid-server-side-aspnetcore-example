@@ -59,8 +59,8 @@ export class FacadeService {
     //     return this.accountService.getAddress();
     //   }
 
-    getOlympicWinners(startRow, endRow) {
-        return this.dashboardService.getOlympicWinners(startRow, endRow);
+    getOlympicWinners(postData) {
+        return this.dashboardService.getOlympicWinners(postData);
     }
 
     //   isAuthenticated() {
