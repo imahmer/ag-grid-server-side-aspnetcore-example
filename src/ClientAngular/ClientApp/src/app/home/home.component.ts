@@ -22,10 +22,11 @@ export class HomeComponent implements OnInit {
   modules: Module[] = [ServerSideRowModelModule];
   rowModelType;
   serverSideStoreType;
+  cacheBlockSize;
 
   columnDefs = [
     { field: 'id', sortable: false, filter: false },
-    { field: 'athlete' },
+    { field: 'athlete', rowGroup: true },
     { field: 'age' },
     { field: 'country' },
     { field: 'year' },
@@ -42,6 +43,7 @@ export class HomeComponent implements OnInit {
   constructor(private facadeService: FacadeService) { 
     this.rowModelType = 'serverSide';
     this.serverSideStoreType = 'partial';
+    this.cacheBlockSize = 10;
   }
 
   ngOnInit() {
@@ -79,6 +81,8 @@ export class HomeComponent implements OnInit {
             "gridPageIndex": 0,
             "searchKeyword": "string",
             "olympicWinnerId": null,
+            "groupKeys": params.request.groupKeys,
+            "rowGroupCols": params.request.rowGroupCols,
             "sortModel": params.request.sortModel,
             "filterModel": params.request.filterModel,
             "olympicWinnerGridFilterListItem": [{
@@ -97,6 +101,9 @@ export class HomeComponent implements OnInit {
         };
           facadeService.getOlympicWinners(postData).subscribe((data: any) => {
             this.olympicWinnerList = data.olympicWinnerGridFilterListItem;
+            console.log(params.request.startRow + 1)
+            console.log(params.request.endRow)
+            console.log(data.olympicWinnerGridFilterListItem)
             params.successCallback(this.olympicWinnerList, data.totalRecords);
           });
         }, 500);
