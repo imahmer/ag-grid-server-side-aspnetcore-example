@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-6">
     <ag-grid-angular 
+      #agGridInfinite
       style="width: 100%; height: 500px;" 
       class="ag-theme-alpine" 
       [animateRows]="true"
@@ -8,7 +9,25 @@
       [defaultColDef]="defaultColDef"
       [modules]="modules"
       [serverSideStoreType]="serverSideStoreType"
+      [cacheBlockSize]="cacheBlockSize"
       [rowModelType]="rowModelType"
+      (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+  </div>
+  <div class="col-6">
+    <ag-grid-angular 
+      #agGridPagination
+      style="width: 100%; height: 500px;" 
+      class="ag-theme-alpine" 
+      [animateRows]="true"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [modules]="modules"
+      [serverSideStoreType]="serverSideStoreType"
+      [cacheBlockSize]="20"
+      [rowModelType]="rowModelType"
+      [pagination]="true"
+      [paginationAutoPageSize]="true"
       (gridReady)="onGridReady($event)">
     </ag-grid-angular>
   </div>

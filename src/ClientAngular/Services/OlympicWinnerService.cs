@@ -138,7 +138,11 @@ namespace ClientAngular.Services
                         condition = tmp;
                     }
                     if (conditionValues.Count == 0) query = query.Where(condition);
-                    else query = query.Where(condition, conditionValues.ToArray());
+                    else
+                    {
+                        query = query.Where(condition, conditionValues.ToArray());
+                    }
+                    result.TotalRecords = query.Count();
                 }
 
                 foreach (var s in olympicWinnerListFilter.SortModel)

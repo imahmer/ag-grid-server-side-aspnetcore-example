@@ -7,6 +7,8 @@ namespace ClientAngular.Models
     {
         public string SearchKeyword { get; set; }
         public int? OlympicWinnerId { get; set; }
+        public string[] GroupKeys { get; set; }
+        public RowGroupCols[] RowGroupCols { get; set; }
         public SortModel[] SortModel { get; set; }
         public Dictionary<string, FilterModel> FilterModel { get; set; }
         public IEnumerable<OlympicWinnerGridFilterListItem> OlympicWinnerGridFilterListItem { get; set; }
