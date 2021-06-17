@@ -26,6 +26,14 @@ export class HomeService {
             )
     }
 
+    public getGroupOlympicWinners(postData): Observable<OlympicWinnerModel> {
+        return this.http.post<OlympicWinnerModel>(this.apiURL + '/api/OlympicWinner/GetOlympicWinnerGroupedList', JSON.stringify(postData), this.httpOptions)
+            .pipe(
+                retry(1),
+                catchError(this.handleError)
+            )
+    }
+
     // Error handling 
     handleError(error) {
         let errorMessage = '';

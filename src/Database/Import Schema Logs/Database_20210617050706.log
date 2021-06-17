@@ -1,0 +1,86 @@
+17/06/2021 10:07:06 am	This log contains information about the import schema operation into project 'Database' on computer 'SS-LPT-HP-9CQ3' by user 'SpurSol-Ahmer'.
+17/06/2021 10:07:07 am	Import of database schema has started.
+17/06/2021 10:07:11 am	Gathering database credentials
+17/06/2021 10:07:11 am	Gathering database options
+17/06/2021 10:07:11 am	Gathering generic database scoped configuration option
+17/06/2021 10:07:11 am	Gathering users
+17/06/2021 10:07:11 am	Gathering roles
+17/06/2021 10:07:12 am	Gathering application roles
+17/06/2021 10:07:12 am	Gathering role memberships
+17/06/2021 10:07:12 am	Gathering filegroups
+17/06/2021 10:07:12 am	Gathering full-text catalogs
+17/06/2021 10:07:12 am	Gathering assemblies
+17/06/2021 10:07:12 am	Gathering certificates
+17/06/2021 10:07:12 am	Gathering asymmetric keys
+17/06/2021 10:07:12 am	Gathering symmetric keys
+17/06/2021 10:07:12 am	Gathering encrypted symmetric keys
+17/06/2021 10:07:12 am	Gathering schemas
+17/06/2021 10:07:12 am	Gathering XML schema collections
+17/06/2021 10:07:12 am	Gathering user-defined data types
+17/06/2021 10:07:12 am	Gathering user-defined types
+17/06/2021 10:07:12 am	Gathering table types
+17/06/2021 10:07:12 am	Gathering unique keys for table types
+17/06/2021 10:07:12 am	Gathering primary keys for table types
+17/06/2021 10:07:12 am	Gathering indexes for table types
+17/06/2021 10:07:12 am	Gathering check constraints for table types
+17/06/2021 10:07:12 am	Gathering default constraints for table types
+17/06/2021 10:07:12 am	Gathering partition functions
+17/06/2021 10:07:12 am	Gathering partition schemes
+17/06/2021 10:07:12 am	Gathering functions
+17/06/2021 10:07:12 am	Gathering encrypted functions
+17/06/2021 10:07:12 am	Gathering aggregates
+17/06/2021 10:07:12 am	Gathering procedures
+17/06/2021 10:07:12 am	Gathering encrypted procedures
+17/06/2021 10:07:12 am	Gathering tables
+17/06/2021 10:07:12 am	Gathering primary keys
+17/06/2021 10:07:12 am	Gathering unique constraints
+17/06/2021 10:07:12 am	Gathering foreign keys
+17/06/2021 10:07:12 am	Gathering default constraints
+17/06/2021 10:07:12 am	Gathering check constraints
+17/06/2021 10:07:12 am	Gathering views
+17/06/2021 10:07:12 am	Gathering encrypted views
+17/06/2021 10:07:12 am	Gathering indexes
+17/06/2021 10:07:12 am	Gathering statistics
+17/06/2021 10:07:12 am	Gathering full-text index stoplists
+17/06/2021 10:07:12 am	Gathering search property lists
+17/06/2021 10:07:12 am	Gathering search properties
+17/06/2021 10:07:12 am	Gathering full-text indexes
+17/06/2021 10:07:12 am	Gathering column store indexes
+17/06/2021 10:07:12 am	Gathering spatial indexes
+17/06/2021 10:07:12 am	Gathering XML indexes
+17/06/2021 10:07:12 am	Gathering Selective XML indexes
+17/06/2021 10:07:12 am	Gathering encrypted triggers
+17/06/2021 10:07:12 am	Gathering triggers
+17/06/2021 10:07:12 am	Gathering encrypted and clr ddl triggers
+17/06/2021 10:07:12 am	Gathering ddl triggers
+17/06/2021 10:07:12 am	Creating edge constraints
+17/06/2021 10:07:12 am	Gathering synonyms
+17/06/2021 10:07:12 am	Gathering defaults
+17/06/2021 10:07:12 am	Gathering data constraint uddt bindings
+17/06/2021 10:07:12 am	Gathering rules
+17/06/2021 10:07:12 am	Gathering data constraint uddt bindings
+17/06/2021 10:07:12 am	Gathering message types
+17/06/2021 10:07:12 am	Gathering queues
+17/06/2021 10:07:12 am	Gathering contracts
+17/06/2021 10:07:12 am	Gathering services
+17/06/2021 10:07:12 am	Gathering event notifications
+17/06/2021 10:07:12 am	Gathering remote service bindings
+17/06/2021 10:07:12 am	Gathering broker priorities
+17/06/2021 10:07:12 am	Gathering signatures
+17/06/2021 10:07:12 am	Gathering data compression options
+17/06/2021 10:07:12 am	Gathering sequence types
+17/06/2021 10:07:12 am	Gathering security policies
+17/06/2021 10:07:12 am	Gather column encryption keys
+17/06/2021 10:07:12 am	Gathering column master keys
+17/06/2021 10:07:12 am	Gathering external data sources
+17/06/2021 10:07:12 am	Gathering external file formats
+17/06/2021 10:07:12 am	Gathering external tables
+17/06/2021 10:07:12 am	Gathering extended properties
+17/06/2021 10:07:12 am	Gathering credentials
+17/06/2021 10:07:12 am	Gathering logins
+17/06/2021 10:07:12 am	Gathering server audits
+17/06/2021 10:07:12 am	Scanning project for duplicate elements
+17/06/2021 10:07:12 am	Finished duplicate element processing
+17/06/2021 10:07:13 am	Finished importing database.
+17/06/2021 10:07:13 am	A summary of the import was saved to the following location: D:\Personal\Dummy Projects\ag-grid-server-side-aspnetcore-example\src\Database\Import Schema Logs\Database_20210617050706.log
+17/06/2021 10:07:13 am	Click Finish to continue...

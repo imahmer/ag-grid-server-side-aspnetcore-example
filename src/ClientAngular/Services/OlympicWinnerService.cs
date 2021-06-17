@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ClientAngular.Services
@@ -17,16 +18,23 @@ namespace ClientAngular.Services
             _olympicWinnerRepository = olympicWinnerRepository;
         }
 
+        public Task<IEnumerable<IGrouping<string, OlympicWinnerGridFilterListItem>>> GetOlympicWinnerGroupedList(OlympicWinnerListFilter olympicWinnerListFilter)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<OlympicWinnerListFilter> GetOlympicWinnerList(OlympicWinnerListFilter olympicWinnerListFilter)
         {
             try
             {
-                var result = await _olympicWinnerRepository.GetOlympicWinnerList(olympicWinnerListFilter);
-                var query = result.OlympicWinnerGridFilterListItem.AsQueryable();
+                string buildSQL = "{0} {1} {2} {3}";
+                string selectQuery = "";
+                string whereQuery = "";
+                string sortQuery = "";
 
                 #region Get Filtered Condition Delegate
-                Func<string, FilterModel, List<object>, string> getConditionFromModel =
-                    (string colName, FilterModel model, List<object> values) =>
+                Func<string, FilterModel, string> getConditionFromModel =
+                    (string colName, FilterModel model) =>
                     {
                         string modelResult = "";
 
@@ -36,81 +44,22 @@ namespace ClientAngular.Services
                                 switch (model.type)
                                 {
                                     case "equals":
-                                        modelResult = $"{colName} = \"{model.filter}\"";
+                                        modelResult = $"{colName} = '{model.filter}'";
                                         break;
                                     case "notEqual":
-                                        modelResult = $"{colName} = \"{model.filter}\"";
+                                        modelResult = $"{colName} <> '{model.filter}'";
                                         break;
                                     case "contains":
-                                        modelResult = $"{colName}.Contains(@{values.Count})";
-                                        values.Add(model.filter);
+                                        modelResult = $"{colName} LIKE '%{model.filter}%'";
                                         break;
                                     case "notContains":
-                                        modelResult = $"!{colName}.Contains(@{values.Count})";
-                                        values.Add(model.filter);
+                                        modelResult = $"{colName} NOT LIKE '%{model.filter}%'";
                                         break;
                                     case "startsWith":
-                                        modelResult = $"{colName}.StartsWith(@{values.Count})";
-                                        values.Add(model.filter);
+                                        modelResult = $"{colName} LIKE '{model.filter}%'";
                                         break;
                                     case "endsWith":
-                                        modelResult = $"!{colName}.StartsWith(@{values.Count})";
-                                        values.Add(model.filter);
-                                        break;
-                                }
-                                break;
-                            case "number":
-                                switch (model.type)
-                                {
-                                    case "equals":
-                                        modelResult = $"{colName} = {model.filter}";
-                                        break;
-                                    case "notEqual":
-                                        modelResult = $"{colName} <> {model.filter}";
-                                        break;
-                                    case "lessThan":
-                                        modelResult = $"{colName} < {model.filter}";
-                                        break;
-                                    case "lessThanOrEqual":
-                                        modelResult = $"{colName} <= {model.filter}";
-                                        break;
-                                    case "greaterThan":
-                                        modelResult = $"{colName} > {model.filter}";
-                                        break;
-                                    case "greaterThanOrEqual":
-                                        modelResult = $"{colName} >= {model.filter}";
-                                        break;
-                                    case "inRange":
-                                        modelResult = $"({colName} >= {model.filter} AND {colName} <= {model.filterTo})";
-                                        break;
-                                }
-                                break;
-                            case "date":
-                                values.Add(model.dateFrom);
-
-                                switch (model.type)
-                                {
-                                    case "equals":
-                                        modelResult = $"{colName} = @{values.Count - 1}";
-                                        break;
-                                    case "notEqual":
-                                        modelResult = $"{colName} <> @{values.Count - 1}";
-                                        break;
-                                    case "lessThan":
-                                        modelResult = $"{colName} < @{values.Count - 1}";
-                                        break;
-                                    case "lessThanOrEqual":
-                                        modelResult = $"{colName} <= @{values.Count - 1}";
-                                        break;
-                                    case "greaterThan":
-                                        modelResult = $"{colName} > @{values.Count - 1}";
-                                        break;
-                                    case "greaterThanOrEqual":
-                                        modelResult = $"{colName} >= @{values.Count - 1}";
-                                        break;
-                                    case "inRange":
-                                        values.Add(model.dateTo);
-                                        modelResult = $"({colName} >= @{values.Count - 2} AND {colName} <= @{values.Count - 1})";
+                                        modelResult = $"{colName} LIKE '%{model.filter}'";
                                         break;
                                 }
                                 break;
@@ -119,51 +68,65 @@ namespace ClientAngular.Services
                     };
                 #endregion
 
+                #region Get Limit Condition Delegate
+                Func<int, int, string> setLimitSQL =
+                    (int startPage, int pageSize) =>
+                    {
+                        startPage = startPage - 1;
+                        return $"OFFSET {startPage}  ROWS FETCH NEXT {pageSize} ROWS ONLY OPTION (RECOMPILE)";
+                    };
+                #endregion
+
+                selectQuery = $"select {String.Join(",", typeof(OlympicWinnerGridFilterListItem).GetProperties().Select(x => x.Name).ToArray())} from OlympicWinners ";
+
+                if (olympicWinnerListFilter.FilterModel.Count() > 0)
+                    whereQuery += "WHERE 1=1 ";
+
                 foreach (var f in olympicWinnerListFilter.FilterModel)
                 {
                     string condition, tmp;
-                    List<object> conditionValues = new List<object>();
 
                     if (!string.IsNullOrWhiteSpace(f.Value.logicOperator))
                     {
-                        tmp = getConditionFromModel(f.Key, f.Value.condition1, conditionValues);
+                        tmp = getConditionFromModel(f.Key, f.Value.condition1);
                         condition = tmp;
 
-                        tmp = getConditionFromModel(f.Key, f.Value.condition2, conditionValues);
-                        condition = $"{condition} {f.Value.logicOperator} {tmp}";
+                        tmp = getConditionFromModel(f.Key, f.Value.condition2);
+                        condition = $"AND ({condition} {f.Value.logicOperator} {tmp})";
                     }
                     else
                     {
-                        tmp = getConditionFromModel(f.Key, f.Value, conditionValues);
-                        condition = tmp;
+                        tmp = getConditionFromModel(f.Key, f.Value);
+                        condition = $"AND {tmp}";
                     }
-                    if (conditionValues.Count == 0) query = query.Where(condition);
-                    else
-                    {
-                        query = query.Where(condition, conditionValues.ToArray());
-                    }
-                    result.TotalRecords = query.Count();
+                    whereQuery += condition;
                 }
+                if (olympicWinnerListFilter.SortModel.Length > 0)
+                    sortQuery += "ORDER BY ";
+                else if(olympicWinnerListFilter.SortModel.Length == 0)
+                    sortQuery += $"ORDER BY {typeof(OlympicWinnerGridFilterListItem).GetProperties().Select(x => x.Name).FirstOrDefault()}";
+
 
                 foreach (var s in olympicWinnerListFilter.SortModel)
                 {
                     switch (s.Sort)
                     {
                         case "asc":
-                            query = query.OrderBy(s.ColId);
+                            sortQuery += $"{s.ColId}";
                             break;
                         case "desc":
-                            query = query.OrderBy($"{s.ColId} descending");
+                            sortQuery += $"{s.ColId} desc";
                             break;
                     };
                 };
 
-                if (olympicWinnerListFilter.SortModel.Count() == 0)
-                {
-                    query = query.OrderBy(x => x.Id);
-                }
-
-                result.OlympicWinnerGridFilterListItem = query.ToList();
+                //buildSQL = string.Format(buildSQL, selectQuery, whereQuery, sortQuery, setLimitSQL(olympicWinnerListFilter.StartIndex, olympicWinnerListFilter.PageSize));
+                olympicWinnerListFilter.SelectQuery = selectQuery;
+                olympicWinnerListFilter.WhereQuery = whereQuery;
+                olympicWinnerListFilter.SortQuery = sortQuery;
+                olympicWinnerListFilter.LimitQuery = setLimitSQL(olympicWinnerListFilter.StartIndex, olympicWinnerListFilter.PageSize);
+                var result = await _olympicWinnerRepository.GetOlympicWinnerList(olympicWinnerListFilter);
+                
                 return result;
             }
             catch (Exception ex)
