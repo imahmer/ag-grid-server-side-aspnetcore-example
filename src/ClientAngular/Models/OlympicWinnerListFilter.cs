@@ -5,7 +5,10 @@ namespace ClientAngular.Models
 {
     public class OlympicWinnerListFilter : PaginationModelBase
     {
-        public string SearchKeyword { get; set; }
+        public string SelectQuery { get; set; }
+        public string WhereQuery { get; set; }
+        public string SortQuery { get; set; }
+        public string LimitQuery { get; set; }
         public int? OlympicWinnerId { get; set; }
         public string[] GroupKeys { get; set; }
         public RowGroupCols[] RowGroupCols { get; set; }

@@ -14,13 +14,13 @@
       (gridReady)="onGridReady($event)">
     </ag-grid-angular>
   </div>
-  <div class="col-6">
+  <!-- <div class="col-6">
     <ag-grid-angular 
       #agGridPagination
       style="width: 100%; height: 500px;" 
       class="ag-theme-alpine" 
       [animateRows]="true"
-      [columnDefs]="columnDefs"
+      [columnDefs]="groupColumnDefs"
       [defaultColDef]="defaultColDef"
       [modules]="modules"
       [serverSideStoreType]="serverSideStoreType"
@@ -28,7 +28,7 @@
       [rowModelType]="rowModelType"
       [pagination]="true"
       [paginationAutoPageSize]="true"
-      (gridReady)="onGridReady($event)">
+      (gridReady)="onGroupGridReady($event)">
     </ag-grid-angular>
-  </div>
+  </div> -->
 </div>

@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientAngular", "ClientAngular\ClientAngular.csproj", "{5A9F29AB-52E0-434E-8748-E56F95C6D4EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientAngular", "ClientAngular\ClientAngular.csproj", "{5A9F29AB-52E0-434E-8748-E56F95C6D4EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{C79E13E8-074B-4379-B2E8-775928107ED0}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "Database\Database.sqlproj", "{727B6D86-08E1-4B50-B527-2E46035911DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,18 @@ Global
 		{5A9F29AB-52E0-434E-8748-E56F95C6D4EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A9F29AB-52E0-434E-8748-E56F95C6D4EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A9F29AB-52E0-434E-8748-E56F95C6D4EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{727B6D86-08E1-4B50-B527-2E46035911DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{727B6D86-08E1-4B50-B527-2E46035911DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{727B6D86-08E1-4B50-B527-2E46035911DF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{727B6D86-08E1-4B50-B527-2E46035911DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{727B6D86-08E1-4B50-B527-2E46035911DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{727B6D86-08E1-4B50-B527-2E46035911DF}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{727B6D86-08E1-4B50-B527-2E46035911DF} = {C79E13E8-074B-4379-B2E8-775928107ED0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD95E6F0-6EAC-44FA-8C92-BE4C899A1BBC}
