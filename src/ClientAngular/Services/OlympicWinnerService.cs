@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ClientAngular.Services
@@ -27,11 +26,6 @@ namespace ClientAngular.Services
         {
             try
             {
-                string buildSQL = "{0} {1} {2} {3}";
-                string selectQuery = "";
-                string whereQuery = "";
-                string sortQuery = "";
-
                 #region Get Filtered Condition Delegate
                 Func<string, FilterModel, string> getConditionFromModel =
                     (string colName, FilterModel model) =>
@@ -72,15 +66,13 @@ namespace ClientAngular.Services
                 Func<int, int, string> setLimitSQL =
                     (int startPage, int pageSize) =>
                     {
-                        startPage = startPage - 1;
-                        return $"OFFSET {startPage}  ROWS FETCH NEXT {pageSize} ROWS ONLY OPTION (RECOMPILE)";
+                        return $"OFFSET {startPage} ROWS FETCH NEXT {pageSize} ROWS ONLY OPTION (RECOMPILE)";
                     };
                 #endregion
 
-                selectQuery = $"select {String.Join(",", typeof(OlympicWinnerGridFilterListItem).GetProperties().Select(x => x.Name).ToArray())} from OlympicWinners ";
+                string selectQuery = selectSQL(olympicWinnerListFilter);
 
-                if (olympicWinnerListFilter.FilterModel.Count() > 0)
-                    whereQuery += "WHERE 1=1 ";
+                string whereQuery = whereSQL(olympicWinnerListFilter);
 
                 foreach (var f in olympicWinnerListFilter.FilterModel)
                 {
@@ -101,38 +93,112 @@ namespace ClientAngular.Services
                     }
                     whereQuery += condition;
                 }
-                if (olympicWinnerListFilter.SortModel.Length > 0)
-                    sortQuery += "ORDER BY ";
-                else if(olympicWinnerListFilter.SortModel.Length == 0)
-                    sortQuery += $"ORDER BY {typeof(OlympicWinnerGridFilterListItem).GetProperties().Select(x => x.Name).FirstOrDefault()}";
 
+                string sortQuery = "ORDER BY";
+                if (olympicWinnerListFilter.SortModel.Length == 0)
+                {
+                    if (isDoingGrouping(olympicWinnerListFilter.RowGroupCols, olympicWinnerListFilter.GroupKeys))
+                        sortQuery += $" {olympicWinnerListFilter.RowGroupCols[olympicWinnerListFilter.GroupKeys.Length].Id}";
+                    else
+                        sortQuery += $" {typeof(OlympicWinnerGridFilterListItem).GetProperties().Select(x => x.Name).FirstOrDefault()}";
+                }
 
                 foreach (var s in olympicWinnerListFilter.SortModel)
                 {
                     switch (s.Sort)
                     {
                         case "asc":
-                            sortQuery += $"{s.ColId}";
+                            sortQuery += $" {s.ColId}";
                             break;
                         case "desc":
-                            sortQuery += $"{s.ColId} desc";
+                            sortQuery += $" {s.ColId} desc";
                             break;
                     };
                 };
 
-                //buildSQL = string.Format(buildSQL, selectQuery, whereQuery, sortQuery, setLimitSQL(olympicWinnerListFilter.StartIndex, olympicWinnerListFilter.PageSize));
                 olympicWinnerListFilter.SelectQuery = selectQuery;
                 olympicWinnerListFilter.WhereQuery = whereQuery;
+                olympicWinnerListFilter.GroupQuery = groupBySql(olympicWinnerListFilter);
                 olympicWinnerListFilter.SortQuery = sortQuery;
                 olympicWinnerListFilter.LimitQuery = setLimitSQL(olympicWinnerListFilter.StartIndex, olympicWinnerListFilter.PageSize);
                 var result = await _olympicWinnerRepository.GetOlympicWinnerList(olympicWinnerListFilter);
-                
                 return result;
             }
             catch (Exception ex)
             {
                 throw;
             }
+        }
+
+        private string selectSQL(OlympicWinnerListFilter olympicWinnerListFilter)
+        {
+            var rowGroupCols = olympicWinnerListFilter.RowGroupCols;
+            var valueCols = olympicWinnerListFilter.ValueCols;
+            var groupKeys = olympicWinnerListFilter.GroupKeys;
+            var colsToSelect = new List<string>();
+            var tableName = "OlympicWinners";
+
+            if (isDoingGrouping(rowGroupCols, groupKeys))
+            {
+                colsToSelect.Add(rowGroupCols[groupKeys.Length].Id);
+
+                foreach (var valueCol in valueCols)
+                {
+                    colsToSelect.Add($"{valueCol.aggFunc}({valueCol.Id}) AS {valueCol.Id}");
+                }
+
+                return $"SELECT {string.Join(", ", colsToSelect.ToArray())} from {tableName}";
+            }
+
+            return $"select * from {tableName}";
+        }
+
+        private string whereSQL(OlympicWinnerListFilter olympicWinnerListFilter)
+        {
+            var rowGroups = olympicWinnerListFilter.RowGroupCols;
+            var groupKeys = olympicWinnerListFilter.GroupKeys;
+            var whereParts = new List<string>();
+
+            if (groupKeys.Length > 0)
+            {
+                foreach (var item in groupKeys.Select((value, i) => new { i, value }))
+                {
+                    var value = item.value;
+                    var index = item.i;
+                    whereParts.Add($"{rowGroups[index].Id} = '{value}'");
+                }
+                return $"WHERE {string.Join(" AND ", whereParts.ToArray())}";
+            }
+
+            return "WHERE 1=1 ";
+        }
+
+        private string groupBySql(OlympicWinnerListFilter olympicWinnerListFilter)
+        {
+            var rowGroupCols = olympicWinnerListFilter.RowGroupCols;
+            var groupKeys = olympicWinnerListFilter.GroupKeys;
+
+            if (isDoingGrouping(rowGroupCols, groupKeys))
+            {
+                return $"GROUP BY {rowGroupCols[groupKeys.Length].Id}";
+            }
+
+            return "";
+        }
+
+        private bool isDoingGrouping(RowGroupCols[] rowGroupCols, string[] groupKeys)
+        {
+            return rowGroupCols.Length > groupKeys.Length;
+        }
+
+        private int getLastRowIndex(int StartIndex, int PageSize, OlympicWinnerListFilter results)
+        {
+            if (results.OlympicWinnerGridFilterListItem == null || results.TotalRecords == 0)
+                return -1;
+
+            var currentLastRow = StartIndex + results.OlympicWinnerGridFilterListItem.Count();
+
+            return currentLastRow <= PageSize ? currentLastRow : -1;
         }
     }
 }

@@ -13,51 +13,70 @@ export class HomeComponent implements OnInit {
 
   private gridApi;
   private gridColumnApi;
-
-  defaultColDef = {
-    sortable: true,
-    filter: true
-  };
   
   modules: Module[] = [ServerSideRowModelModule];
   rowModelType;
   serverSideStoreType;
   cacheBlockSize;
 
-  columnDefs = [
-    { field: 'athlete' },
-    { field: 'age' },
-    { field: 'country' },
-    { field: 'year' },
-    { field: 'date' },
-    { field: 'sport' },
-    { field: 'gold' },
-    { field: 'silver' },
-    { field: 'bronze' },
-    { field: 'total' }
-  ];
-
-  groupColumnDefs = [
-    { field: 'country', rowGroup: true, hide: true },
-    { field: 'gold', aggFunc: 'sum' },
-    { field: 'silver', aggFunc: 'sum' },
-    { field: 'bronze', aggFunc: 'sum' },
-  ];
-
-
+  defaultColDef;
+  autoGroupColumnDef;
+  columnDefs;
 
   constructor(private facadeService: FacadeService) { 
     this.rowModelType = 'serverSide';
     this.serverSideStoreType = 'partial';
     this.cacheBlockSize = 10;
+
+    this.columnDefs = [
+      // { field: 'athlete' },
+      // { field: 'age' },
+      { 
+        field: 'country',
+        valueGetter: 'data.country',
+        rowGroup: true,
+        hide: true,
+      },
+      { 
+        field: 'sport',
+        hide: true,
+      },
+      { field: 'year' },
+      // { field: 'date' },
+      { 
+        field: 'gold',
+        aggFunc: 'sum', 
+      },
+      { 
+        field: 'silver',
+        aggFunc: 'sum',  
+      },
+      { 
+        field: 'bronze',
+        aggFunc: 'sum', 
+      },
+      // { 
+      //   field: 'total',
+      //   aggFunc: 'sum',  
+      // }
+    ];
+
+    this.defaultColDef = {
+      flex: 1,
+      minWidth: 120,
+      resizable: true,
+      sortable: true,
+      filter: true
+    };
+
+    this.autoGroupColumnDef  = {
+      flex: 1,
+      minWidth: 280,
+      field: 'athlete',
+    };
   }
 
-  ngOnInit() {
-    // this.facadeService.getOlympicWinners(1, 20).subscribe((data: any) => {
-    //   this.olympicWinnerList = data.olympicWinnerGridFilterListItem;
-    //   console.log(this.olympicWinnerList)
-    // });
-  }
+  ngOnInit() { }
 
   onGridReady(params) {
     this.gridApi = params.api;
@@ -66,29 +85,21 @@ export class HomeComponent implements OnInit {
     params.api.setServerSideDatasource(datasource);
   }
 
-  onGroupGridReady(params) {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
-    var datasource = this.createServerSideGroupingDatasource(this.facadeService);
-    params.api.setServerSideDatasource(datasource);
-  }
-
   createServerSideDatasource(facadeService: FacadeService) {
     return {
       getRows: function (params) {
         setTimeout(function () {
-          console.log(params.request)
           let postData = {
-            "startIndex": params.request.startRow + 1,
+            "startIndex": params.request.startRow,
             "pageSize": params.request.endRow,
             "totalRecords": 0,
             "filterFormId": "string",
             "gridContainerId": "string",
             "gridPageIndex": 0,
             "searchKeyword": "string",
-            "olympicWinnerId": null,
-            "groupKeys": params.request.groupKeys,
             "rowGroupCols": params.request.rowGroupCols,
+            "valueCols": params.request.valueCols,
+            "groupKeys": params.request.groupKeys,
             "sortModel": params.request.sortModel,
             "filterModel": params.request.filterModel,
             "olympicWinnerGridFilterListItem": [{
@@ -106,55 +117,8 @@ export class HomeComponent implements OnInit {
             }]
         };
           facadeService.getOlympicWinners(postData).subscribe((data: any) => {
-            // console.log(data.olympicWinnerGridFilterListItem)
             this.olympicWinnerList = data.olympicWinnerGridFilterListItem;
             params.successCallback(this.olympicWinnerList, data.totalRecords);
-          });
-        }, 500);
-      }
-    }
-  }
-
-  createServerSideGroupingDatasource(facadeService: FacadeService) {
-    return {
-      getRows: function (params) {
-        setTimeout(function () {
-          let postData = {
-            "startIndex": params.request.startRow + 1,
-            "pageSize": params.request.endRow,
-            "totalRecords": 0,
-            "filterFormId": "string",
-            "gridContainerId": "string",
-            "gridPageIndex": 0,
-            "searchKeyword": "string",
-            "olympicWinnerId": null,
-            "groupKeys": params.request.groupKeys,
-            "rowGroupCols": params.request.rowGroupCols,
-            "sortModel": params.request.sortModel,
-            "filterModel": params.request.filterModel,
-            "olympicWinnerGridFilterListItem": [{
-                "id": 0,
-                "athlete": "string",
-                "age": 0,
-                "country": "string",
-                "year": 0,
-                "date": "string",
-                "sport": "string",
-                "gold": 0,
-                "silver": 0,
-                "bronze": 0,
-                "total": 0,
-            }]
-        };
-          facadeService.getGroupOlympicWinners(postData).subscribe((data: any) => {
-            let arrayOfObjects = [];
-            data.forEach(element => {
-              element.forEach(e => {
-                arrayOfObjects.push(e)
-              });
-            });
-            console.log(arrayOfObjects)
-            params.successCallback(arrayOfObjects, data.totalRecords);
           });
         }, 500);
       }

@@ -70,4 +70,7 @@
     <Build Include="dbo\Stored Procedures\Usp_OlympicWinnerGetGridFilterList.sql" />
     <Build Include="dbo\Stored Procedures\Usp_Filtered_Data.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="dbo\Seed Data.sql" />
+  </ItemGroup>
 </Project>

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClientAngular.Models
+﻿namespace ClientAngular.Models
 {
     public class OlympicWinnerGridFilterListItem
     {
@@ -11,9 +9,9 @@ namespace ClientAngular.Models
         public int Year { get; set; }
         public string Date { get; set; }
         public string Sport { get; set; }
-        public byte Gold { get; set; }
-        public byte Silver { get; set; }
-        public byte Bronze { get; set; }
-        public byte Total { get; set; }
+        public int Gold { get; set; }
+        public int Silver { get; set; }
+        public int Bronze { get; set; }
+        public int Total { get; set; }
     }
 }

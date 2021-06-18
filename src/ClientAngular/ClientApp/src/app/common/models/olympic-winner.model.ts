@@ -3,7 +3,7 @@ export class OlympicWinnerModel {
     athlete: string;
     age: number;
     country: string;
-    year: number;
+    year: string | number;
     date: string;
     sport: string;
     gold: number;

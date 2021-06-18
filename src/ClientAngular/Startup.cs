@@ -26,6 +26,15 @@ namespace ClientAngular
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews().AddNewtonsoftJson();
+            services.AddCors(o => o.AddPolicy("GlobalPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader()
+                       .WithOrigins("http://localhost:4200", "https://localhost:44341")
+                       .AllowCredentials();
+            }));
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -77,6 +86,7 @@ namespace ClientAngular
                 app.UseSpaStaticFiles();
             }
 
+            app.UseCors("GlobalPolicy");
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
