@@ -44,3 +44,5 @@ Thumbs.db
 Logs
 .vs/
 /.vs
+/src/Database/Database.jfm
+/src/Database/Database.dbmdl

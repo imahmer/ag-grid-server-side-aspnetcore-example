@@ -1,16 +1,19 @@
 ﻿CREATE PROCEDURE [dbo].[Usp_Filtered_Data]
 @SelectQuery nvarchar(500),
 @WhereQuery nvarchar(500),
+@GroupQuery nvarchar(500),
 @SortQuery nvarchar(500),
 @LimitQuery nvarchar(500),
-@Totalrecords BIGINT OUTPUT
+@TotalRecords BIGINT OUTPUT
 AS
 BEGIN
 DECLARE @SQL varchar(MAX)
 DECLARE @params NVARCHAR(255) = '@Count BIGINT OUTPUT'
-DECLARE @totalRecord NVARCHAR(4000) = 'SELECT @Count = COUNT(*) FROM OlympicWinners ' + @WhereQuery;
-SET @SQL = @SelectQuery + @WhereQuery + @SortQuery + ' ' + @LimitQuery;
+DECLARE @TotalCount NVARCHAR(500) = 'SELECT @Count = COUNT(1) FROM OlympicWinners '
+IF ISNULL(@WhereQuery, '') != ''
+	SET @TotalCount = @TotalCount + @WhereQuery + ' ' + @GroupQuery
+SET @SQL = @SelectQuery + ' ' + ISNULL(@WhereQuery, '') + ' ' + @GroupQuery + ' ' + @SortQuery + ' ' + @LimitQuery;
 EXEC(@SQL)
-EXEC sp_executeSQL @totalRecord, @params, @Count = @Totalrecords OUTPUT;
+EXEC sp_executeSQL @TotalCount, @params, @Count = @TotalRecords OUTPUT;
 return @Totalrecords
 END

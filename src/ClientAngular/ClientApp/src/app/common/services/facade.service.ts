@@ -63,10 +63,6 @@ export class FacadeService {
         return this.dashboardService.getOlympicWinners(postData);
     }
 
-    getGroupOlympicWinners(postData) {
-        return this.dashboardService.getGroupOlympicWinners(postData);
-    }
-
     //   isAuthenticated() {
     //     return this.loginService.isAuthenticated();
     //   }
